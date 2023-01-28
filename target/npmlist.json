@@ -1,0 +1,1 @@
+{"version":"1.0.0","name":"socialnet-backend","dependencies":{"apollo-server":{"version":"3.11.1"},"express":{"version":"4.18.2"},"graphql":{"version":"16.6.0"}}}
