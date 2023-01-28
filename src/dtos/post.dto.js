@@ -1,7 +1,6 @@
 const Joi = require('Joi');
 
 const id = Joi.string();
-const userId = Joi.string();
 const privacy = Joi.string();
 const location = Joi.string();
 const content = Joi.string();
