@@ -66,23 +66,20 @@ describe('Test for /api/v1/posts', () => {
         test('should return a new post', () => { 
             // Arrange
             const fakePost = {
-                _id: 20,
                 content: 'Hello there',
-                userId: 'q3213-12312312-123123',
-                pollId: null,
                 privacy: 'public',
                 location: 'New York',
-                createdat: new Date(),
             }
             mockCreate.mockResolvedValue(fakePost);
 
             // Act
             return request(app)
                 .post('/api/v1/posts')
+                .send(fakePost)
                 .expect(201)
                 .then(({ body }) => {
                     // Assert
-                    expect(body._id).toEqual(20);
+                    expect(body.privacy).toEqual('public');
                 });
         });
     });
@@ -91,19 +88,16 @@ describe('Test for /api/v1/posts', () => {
         test('should return an updated post', () => {
             // Arrange
             const fakeUpdatedPost = {
-                _id: 20,
                 content: 'Hello there, this is the same post',
-                userId: 'q3213-12312312-123123',
-                pollId: null,
                 privacy: 'public',
                 location: 'New York',
-                createdat: new Date(),
             }
             mockUpdate.mockResolvedValue(fakeUpdatedPost);
 
             // Act
             return request(app)
                 .put('/api/v1/posts/20')
+                .send(fakeUpdatedPost)
                 .expect(201)
                 .then(({ body }) => {
                     // Assert
