@@ -1,14 +1,15 @@
 const db = require('../db/mongo/mongo.lib');
+const Post = require('../db/mongo/models/posts.model');
 
 class Posts {
     constructor() {
-        this.collection = 'posts';
+        this.model = Post;
         this.db = new db();
     }
 
     async getAll(query) {
         try {
-            const data = await this.db.getAll(this.collection, query);
+            const data = await this.db.getAll(this.model, query);
             return data;
         } catch(err) {
             console.log(err);
@@ -17,7 +18,7 @@ class Posts {
 
     async getOne(id) {
         try {
-            const data = await this.db.getOne(this.collection, id);
+            const data = await this.db.getOne(this.model, id);
             return data;
         } catch(err) {
             console.log(err);
@@ -26,7 +27,7 @@ class Posts {
 
     async create(post) {
         try {
-            const data = await this.db.create(this.collection, post);
+            const data = await this.db.create(this.model, post);
             return data;
         } catch(err) {
             console.log(err);
@@ -35,7 +36,7 @@ class Posts {
 
     async update(id, changes) {
         try {
-            const data = await this.db.update(this.collection, id, changes);
+            const data = await this.db.update(this.model, id, changes);
             return data;
         } catch(err) {
             console.log(err);
@@ -44,7 +45,7 @@ class Posts {
 
     async remove(id) {
         try {
-            const data = await this.db.remove(this.collection, id);
+            const data = await this.db.remove(this.model, id);
             return data;
         } catch(err) {
             console.log(err);

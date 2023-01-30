@@ -52,7 +52,6 @@ router.put('/:id',
         try {
             const { id } = req.params;
             const { body } = req;
-            console.log(body)
 
             const data = await service.update(id, body);
             res

@@ -1,0 +1,29 @@
+type Query {
+    post(id: ID!): [Post]!
+    posts: [Post]!
+}
+
+type Mutation {
+    addPost(dto: CreatePostInput): Post
+    updatePost(id: ID!, dto: UpdatePostInput): Post
+    removePost(id: ID!): ID
+}
+
+type Post {
+    id: ID!
+    content: String!
+    location: String!
+    privacy: String!
+}
+
+input CreatePostInput {
+    content: String!
+    location: String!
+    privacy: String!
+}
+
+input UpdatePostInput {
+    content: String
+    location: String
+    privacy: String
+}

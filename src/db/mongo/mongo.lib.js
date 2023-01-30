@@ -1,53 +1,37 @@
-const { MongoClient, ObjectId } = require('mongodb');
 const { config } = require('../../config/config');
+const mongoose = require('mongoose');
 
 const DB_NAME = config.dbName;
 const MONGO_URI = config.dbUrl;
 
 class Mongo {
-    constructor() {
-        this.client = new MongoClient(MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        this.dbName = DB_NAME;
-    }
-
     async connect() {
-        if(!Mongo.connection) {
-            await this.client.connect();
-            Mongo.connection = this.client.db(this.dbName);
-            return Mongo.connection;
-        }
-        return Mongo.connection;
+        mongoose.connect(MONGO_URI);
     }
 
-    async getAll(collection, query) {
-        const db = await this.connect();
-        return db.collection(collection).find(query).toArray();
+    async getAll(model, query) {
+        await this.connect();
+        return await model.find(query);
     }
 
-    async getOne(collection, id) {
-        const db = await this.connect();
-        const filter = ObjectId(id);
-        return db.collection(collection).findOne(filter);
+    async getOne(model, id) {
+        await this.connect();
+        return await model.find({_id: id});
     }
 
-    async create(collection, data) {
-        const db = await this.connect();
-        return db.collection(collection).insertOne(data);
+    async create(model, data) {
+        await this.connect();
+        return await model.create(data);
     }
 
-    async update(collection, id, changes) {
-        const db = await this.connect();
-        const filter = ObjectId(id);
-        return db.collection(collection).updateOne( { _id: filter }, { $set: changes });
+    async update(model, id, changes) {
+        await this.connect();
+        return await model.findOneAndUpdate( { _id: id }, changes);
     }
 
-    async remove(collection, id) {
-        const db = await this.connect();
-        const filter = ObjectId(id);
-        await db.collection(collection).deleteOne({ _id: filter });
+    async remove(model, id) {
+        await this.connect();
+        await model.deleteOne({ _id: id });
 
         return id;
     }

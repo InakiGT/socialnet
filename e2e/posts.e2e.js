@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb');
 const createApp = require('../src/app');
 const { config } = require('../src/config/config');
 
-const DB_NAME = config.dbName;
+const DB_NAME = 'test';
 const MONGO_URI = config.dbUrl;
 const COLLECTION = 'posts';
 
@@ -26,7 +26,7 @@ describe('Test for Posts', () => {
     });
 
     afterAll(async () => {
-       await server.close(); 
+       await server.close();
        await db.dropDatabase();
     });
 
@@ -70,7 +70,7 @@ describe('Test for Posts', () => {
                 .expect(200)
                 .then(({ body }) => {
                     // Assert
-                    expect(body._id).toEqual(id);
+                    expect(body[0]._id).toEqual(id);
                 });
         });
     });
@@ -92,7 +92,7 @@ describe('Test for Posts', () => {
                 .expect(201)
                 .then(({ body }) => {
                     // Assert
-                    expect(body.acknowledged).toEqual(true);
+                    expect(body.content).toEqual(seedData.content);
                 });
         });
     });
@@ -117,7 +117,7 @@ describe('Test for Posts', () => {
                 .expect(201)
                 .then(({ body }) => {
                     // Assert
-                    expect(body.modifiedCount).toEqual(1);
+                    expect(body._id).toEqual(id);
                 });
         });
     });
