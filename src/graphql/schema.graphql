@@ -1,12 +1,17 @@
 type Query {
     post(id: ID!): [Post]!
     posts: [Post]!
+    user(id: ID!): [User]!
+    users: [User]! 
 }
 
 type Mutation {
     addPost(dto: CreatePostInput): Post
     updatePost(id: ID!, dto: UpdatePostInput): Post
     removePost(id: ID!): ID
+    addUser(dto: CreateUserInput): User
+    updateUser(id: ID!, dto: UpdateUserInput): User
+    removeUser(id: ID!): ID
 }
 
 type Post {
@@ -14,6 +19,18 @@ type Post {
     content: String!
     location: String!
     privacy: String!
+}
+
+type User {
+    id: ID!
+    name: String!
+    username: String!
+    biography: String
+    location: String
+    website: String
+    birthdate: String!
+    photo: String
+    background: String
 }
 
 input CreatePostInput {
@@ -26,4 +43,26 @@ input UpdatePostInput {
     content: String
     location: String
     privacy: String
+}
+
+input CreateUserInput {
+    username: String!
+    name: String!
+    birthdate: String!
+    biography: String
+    location: String
+    website: String
+    photo: String
+    background: String
+}
+
+input UpdateUserInput {
+    username: String
+    name: String
+    birthdate: String
+    biography: String
+    location: String
+    website: String
+    photo: String
+    background: String
 }
