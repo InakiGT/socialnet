@@ -9,7 +9,7 @@ class Errors {
     static boomErrorHandler(err, req, res, next) {
         if(err.isBoom) {
             const { output } = err;
-            res.statu(output.statusCode).json(output.payload);
+            res.status(output.statusCode).json(output.payload);
         } else {
             next(err);
         }

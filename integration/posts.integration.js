@@ -114,7 +114,7 @@ describe('Test for /api/v1/posts', () => {
             // Act
             return request(app)
                 .delete('/api/v1/posts/20')
-                .expect(201)
+                .expect(202)
                 .then(({ body }) => {
                     // Assert
                     expect(body).toEqual(20);

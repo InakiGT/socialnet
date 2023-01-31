@@ -1,21 +1,22 @@
 const request = require('supertest');
 const { MongoClient } = require('mongodb');
 
-const createApp = require('../src/app');
 const { config } = require('../src/config/config');
+const createApp = require('../src/app');
 
 const DB_NAME = 'test';
 const MONGO_URI = config.dbUrl;
-const COLLECTION = 'posts';
+const COLLECTION = 'users';
 
-describe('Test for Posts', () => {
+describe('Test for Users', () => {
+    let db;
     let app;
     let server;
-    let db;
 
-    beforeAll(async () => {
+    beforeAll(async() => {
         app = await createApp();
-        server = app.listen(3001);
+        server = app.listen(3002);
+
         const client = new MongoClient(MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -25,48 +26,47 @@ describe('Test for Posts', () => {
         db = client.db(DB_NAME);
     });
 
-    afterAll(async () => {
-       await server.close();
-       await db.command({ "drop": COLLECTION });
+    afterAll(async() => {
+        await server.close();
+        await db.command({ "drop": COLLECTION });
     });
 
-    describe('Test [GET]', () => {
-        test('should return a posts list', async () => { 
-            // Arrange
+    describe('Test for [GET]', () => {
+        test('should return a list of users', async () => {
             const seedData = await db.collection(COLLECTION).insertMany([
                 {
-                    content: 'Hello there',
-                    privacy: 'public',
-                    location: 'New York',
+                    username: 'IñakiDev',
+                    name: 'Iñaki',
+                    birthday: new Date(),
                 },
                 {
-                    content: 'Hello there, this another post',
-                    privacy: 'public',
-                    location: 'New York',
-                }
-            ]);
-
-            // Act
+                    username: 'FernandaPP',
+                    name: 'Fernanda',
+                    birthday: new Date(),
+                },
+            ]); 
+            
             return request(app)
-                .get('/api/v1/posts')
+                .get('/api/v1/users')
                 .expect(200)
                 .then(({ body }) => {
-                    // Assert
                     expect(body.length).toEqual(seedData.insertedCount);
                 });
         });
 
-        test('should return a post', async () => {
+        test('should return one user', async() => {
             // Arrange
             const seedData = await db.collection(COLLECTION).insertOne({
-                content: 'Hello there',
-                privacy: 'public',
-                location: 'New York',
+                username: 'IñakiDev',
+                name: 'Iñaki',
+                birthday: new Date(),
             });
+
             const id = seedData.insertedId.toString();
+            
             // Act
             return request(app)
-                .get(`/api/v1/posts/${id}`)
+                .get(`/api/v1/users/${id}`)
                 .expect(200)
                 .then(({ body }) => {
                     // Assert
@@ -75,65 +75,65 @@ describe('Test for Posts', () => {
         });
     });
 
-    describe('Test [POST]', () => {
-        test('should return a new post', () => {
+    describe('Test for [POST]', () => {
+        test('should return a new user', async() => {
             // Arrange
             const data = {
-                content: 'Hello there',
-                privacy: 'public',
-                location: 'New York',
+                username: 'IñakiDev',
+                name: 'Iñaki',
+                birthday: new Date(),
             }
 
             // Act
             return request(app)
-                .post('/api/v1/posts')
+                .post('/api/v1/users')
                 .set('Accept', 'application/json')
                 .send(data)
                 .expect(201)
                 .then(({ body }) => {
                     // Assert
-                    expect(body.content).toEqual(data.content);
+                    expect(body.username).toEqual(data.username);
                 });
         });
 
-        test('should return Bad request', () => {
+        test('should return Bad request', async() => {
             // Arrange
-            const data = { content: 'Hello' };
+            const data = { name: 'Miguel' };
 
             // Act
             return request(app)
-                .post('/api/v1/posts')
+                .post('/api/v1/users')
                 .set('Accept', 'application/json')
                 .send(data)
                 .expect(400)
-                .then(({ body }) => {
+                .then((({ body }) => {
                     // Assert
                     expect(body.error).toEqual('Bad Request');
-                });
+                }));
         });
     });
 
-    describe('Test [PUT]', () => {
+    describe('Test for [PUT]', () => {
         let seedData;
         let id;
 
         beforeAll(async () => {
             seedData = await db.collection(COLLECTION).insertOne({
-                content: 'Hello there',
-                privacy: 'public',
-                location: 'New York',
+                username: 'IñakiDev',
+                name: 'Iñaki',
+                birthday: new Date(),
             });
             id = seedData.insertedId.toString();
         });
 
-        test('should return an updated post', () => {
+        test('should return an updated user', () => {
             // Arrange
             // Act
             return request(app)
-                .put(`/api/v1/posts/${id}`)
+                .put(`/api/v1/users/${id}`)
                 .set('Accept', 'application/json')
                 .send({
-                    content: 'Hello there again'
+                    username: 'Pedro',
                 })
                 .expect(201)
                 .then(({ body }) => {
@@ -145,11 +145,11 @@ describe('Test for Posts', () => {
         test('should return Bad request', () => {
             // Arrange
             // Act
-            return request(app)
-            .put(`/api/v1/posts/${id}`)
+            return request(app)                .
+            put(`/api/v1/users/${id}`)
             .set('Accept', 'application/json')
             .send({
-                content: 12,
+                username: 12,
             })
             .expect(400)
             .then(({ body }) => {
@@ -160,23 +160,23 @@ describe('Test for Posts', () => {
     });
 
     describe('Test [DELETE]', () => {
-        test('should return post id', async() => {
+        test('should return a user id', async() => {
             // Arrange
             const seedData = await db.collection(COLLECTION).insertOne({
-                content: 'I will die',
-                privacy: 'public',
-                location: 'Bogota',
+                username: 'Pedro',
+                name: 'Pedro',
+                birthday: new Date(),
             });
             const id = seedData.insertedId.toString();
 
             // Act
             return request(app)
-                .delete(`/api/v1/posts/${id}`)
+                .delete(`/api/v1/users/${id}`)
                 .expect(202)
                 .then(({ body }) => {
                     // Assert
                     expect(body).toEqual(id);
                 });
         });
-    });
-})
+    })
+});
