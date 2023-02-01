@@ -5,6 +5,7 @@ const generateOneUser = () => ({
     biography: faker.lorem.sentence(),
     name: faker.helpers.arrayElement(['inaki']),
     username: faker.company.name(),
+    password: faker.datatype.uuid(),
     birthday: faker.datatype.datetime(),
     created_at: faker.datatype.datetime(),
 });
@@ -17,6 +18,7 @@ const generateManyUsers = (size) => {
             biography: faker.lorem.sentence(),
             name: faker.company.name(),
             username: faker.company.name(),
+            password: faker.datatype.uuid(),
             location: faker.address.cityName(),
             created_at: faker.datatype.datetime(),
         });

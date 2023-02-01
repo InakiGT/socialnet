@@ -13,6 +13,8 @@ const createApp = async () => {
     routerApi(app);
     await useGraphql(app);
 
+    require('./utils/auth');
+
     app.use(boomErrorHandler);
     app.use(errorHandler);
 

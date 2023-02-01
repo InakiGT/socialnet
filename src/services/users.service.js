@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const db = require('../db/mongo/mongo.lib');
 const User = require('../db/mongo/models/users.model');
 
@@ -25,9 +27,22 @@ class Users {
         }
     }
 
-    async create(post) {
+    async getOneByUsername(username) {
         try {
-            const data = await this.db.create(this.model, post);
+            const data = await this.db.getOneByQuery(this.model, { username });
+            return data;
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    async create(user) {
+        try {
+            const password = await bcrypt.hash(user.password, 10);
+            const data = await this.db.create(this.model, {
+                ...user,
+                password,
+            });
             return data;
         } catch(err) {
             console.log(err);

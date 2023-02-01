@@ -5,6 +5,7 @@ const fakeUsers = [
         _id: 1,
         username: 'Iñakikiriki',
         name: 'iñaki',
+        password: '2132nfssada',
         location: 'MX',
         biography: '...',
         website: 'inakidev.com',
@@ -14,11 +15,13 @@ const fakeUsers = [
 const DbStub = {
     getAll: () => [...fakeUsers],
     getOne: () => fakeUsers[0],
+    getOneByQuery: () => fakeUsers[0],
     create: () => {
         fakeUsers.push({
             _id: 2,
             username: 'Iñakikiriki',
             name: 'iñaki',
+            password: '2132nfssada',
             location: 'MX',
             biography: '...',
             website: 'inakidev.com',
@@ -54,8 +57,13 @@ describe('users service', () => {
         expect(body._id).toEqual(1);
     });
 
+    test('Test get one by username service', async () => {
+        const body = await service.getOneByUsername('sdad');
+        expect(body._id).toEqual(1);
+    });
+
     test('Test create service ', async() => {
-        const body = await service.create();
+        const body = await service.create({password: ''});
         expect(body._id).toEqual(2);
     });
 

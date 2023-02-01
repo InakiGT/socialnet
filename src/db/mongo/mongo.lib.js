@@ -19,6 +19,11 @@ class Mongo {
         return await model.find({_id: id});
     }
 
+    async getOneByQuery(model, query) {
+        await this.connect();
+        return await model.find(query);
+    }
+
     async create(model, data) {
         await this.connect();
         return await model.create(data);

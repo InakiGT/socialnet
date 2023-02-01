@@ -12,11 +12,12 @@ describe('Test for Posts', () => {
     let app;
     let server;
     let db;
+    let client;
 
     beforeAll(async () => {
         app = await createApp();
         server = app.listen(3001);
-        const client = new MongoClient(MONGO_URI, {
+        client = new MongoClient(MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -26,8 +27,9 @@ describe('Test for Posts', () => {
     });
 
     afterAll(async () => {
-       await server.close();
-       await db.command({ "drop": COLLECTION });
+        await db.command({ "drop": COLLECTION });
+        await client.close();
+        await server.close();
     });
 
     describe('Test [GET]', () => {

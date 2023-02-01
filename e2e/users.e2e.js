@@ -12,12 +12,13 @@ describe('Test for Users', () => {
     let db;
     let app;
     let server;
+    let client;
 
     beforeAll(async() => {
         app = await createApp();
         server = app.listen(3002);
 
-        const client = new MongoClient(MONGO_URI, {
+        client = new MongoClient(MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -27,15 +28,16 @@ describe('Test for Users', () => {
     });
 
     afterAll(async() => {
+        await db.collection(COLLECTION).deleteMany({});
+        await client.close();
         await server.close();
-        await db.command({ "drop": COLLECTION });
     });
 
     describe('Test for [GET]', () => {
         test('should return a list of users', async () => {
             const seedData = await db.collection(COLLECTION).insertMany([
                 {
-                    username: 'IñakiDev',
+                    username: 'Iñaki',
                     name: 'Iñaki',
                     birthday: new Date(),
                 },
@@ -57,7 +59,7 @@ describe('Test for Users', () => {
         test('should return one user', async() => {
             // Arrange
             const seedData = await db.collection(COLLECTION).insertOne({
-                username: 'IñakiDev',
+                username: 'IñakiDevV',
                 name: 'Iñaki',
                 birthday: new Date(),
             });
@@ -81,6 +83,7 @@ describe('Test for Users', () => {
             const data = {
                 username: 'IñakiDev',
                 name: 'Iñaki',
+                password: 'thisismipassword',
                 birthday: new Date(),
             }
 
@@ -119,7 +122,7 @@ describe('Test for Users', () => {
 
         beforeAll(async () => {
             seedData = await db.collection(COLLECTION).insertOne({
-                username: 'IñakiDev',
+                username: 'IñakiDv',
                 name: 'Iñaki',
                 birthday: new Date(),
             });
@@ -163,7 +166,7 @@ describe('Test for Users', () => {
         test('should return a user id', async() => {
             // Arrange
             const seedData = await db.collection(COLLECTION).insertOne({
-                username: 'Pedro',
+                username: 'Pedroo',
                 name: 'Pedro',
                 birthday: new Date(),
             });
