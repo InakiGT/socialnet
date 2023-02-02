@@ -13,7 +13,7 @@ const fakeUsers = [
 const fakeToken = '-Iy[WsDpd]gw,:6';
 
 const ServiceStub = {
-    getOneByUsername: () => fakeUsers[0],
+    getOneByUsername: () => fakeUsers,
 }
 
 jest.mock('./users.service', () => jest.fn().mockImplementation(() => ServiceStub));
@@ -25,6 +25,14 @@ jest.mock('jsonwebtoken', () => {
     };
 });
 
+jest.mock('bcrypt', () => {
+    return {
+        compare: jest.fn().mockImplementation((password, compare_password) => {
+            return true;
+        })
+    }
+});
+
 describe('auth service', () => {
     let service;
     beforeAll(() => {
@@ -33,11 +41,11 @@ describe('auth service', () => {
 
     test('Test getUser', async() => { 
         const body = await service.getUser('Inaki', 'password');
-        expect(body._id).toEqual(1);
+        expect(body[0]._id).toEqual(1);
     });
 
     test('Test signToken', async() => { 
-        const body = await service.signToken(fakeUsers[0]);
+        const body = await service.signToken(fakeUsers);
         expect(body.token).toEqual(fakeToken);
     });
 });

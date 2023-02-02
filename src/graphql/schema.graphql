@@ -12,6 +12,7 @@ type Mutation {
     addUser(dto: CreateUserInput): User
     updateUser(id: ID!, dto: UpdateUserInput): User
     removeUser(id: ID!): ID
+    login(dto: LoginInput): AuthResponse
 }
 
 type Post {
@@ -31,6 +32,11 @@ type User {
     birthdate: String!
     photo: String
     background: String
+}
+
+type AuthResponse {
+    token: String
+    username: String
 }
 
 input CreatePostInput {
@@ -65,4 +71,9 @@ input UpdateUserInput {
     website: String
     photo: String
     background: String
+}
+
+input LoginInput {
+    username: String!
+    password: String!
 }

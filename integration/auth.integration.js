@@ -1,5 +1,6 @@
 const mockGetUser = jest.fn();
 const mockSignToken = jest.fn();
+const mockCompare = jest.fn();
 
 const request = require('supertest');
 
@@ -11,9 +12,15 @@ jest.mock('../src/services/users.service', () => jest.fn().mockImplementation(()
 
 jest.mock('jsonwebtoken', () => {
     return {
-        sign: mockSignToken
+        sign: mockSignToken,
     }
 });
+
+jest.mock('bcrypt', () => {
+    return {
+        compare: mockCompare,
+    }
+})
 
 describe('Test for /api/v1/auth', () => {
     let app;
@@ -36,7 +43,8 @@ describe('Test for /api/v1/auth', () => {
 
         test('should return a token', () => { 
             // Arrange
-            mockGetUser.mockResolvedValue(user);
+            mockGetUser.mockResolvedValue([user]);
+            mockCompare.mockResolvedValue(true);
             mockSignToken.mockResolvedValue('token');
 
             // Act

@@ -13,30 +13,31 @@ class Auth {
     async getUser(username, password) {
         try {
             const user = await this.service.getOneByUsername(username);
-            const isMatch = bcrypt.compare(user.password, password);
+            const isMatch = await bcrypt.compare(password, user[0].password);
             if(!isMatch) {
                 throw boom.unauthorized();
             }
-
+            
             return user;
         } catch(err) {
-            console.log(err);
+            throw new Error(err);
         }
     }
 
     async signToken(user) {
         try {
             const payload = {
-                sub: user._id
+                sub: user[0]._id
             }
             
             const token = await jwt.sign(payload, config.jwtSectret);
+            
             return {
                 token,
-                username: user.username,
+                username: user[0].username,
             };
         } catch(err) {
-            console.log(err);
+            throw new Error(err);
         }
     }
 }
