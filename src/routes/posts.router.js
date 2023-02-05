@@ -3,6 +3,7 @@ const express = require('express');
 const Posts = require('../services/posts.service');
 const { validate } = require('../middlewares/validator.handler');
 const { getDeltePostDto, createPostDto, updatePostDto } = require('../dtos/post.dto');
+const passport = require('passport');
 
 const router = express.Router();
 const service = new Posts();
@@ -33,6 +34,7 @@ router.get('/:id',
 });
 
 router.post('/',
+    passport.authenticate('jwt', { session: false }),
     validate(createPostDto, 'body'),
     async (req, res, next) => {
         try {
@@ -47,6 +49,7 @@ router.post('/',
 });
 
 router.put('/:id',
+    passport.authenticate('jwt', { session: false }),
     validate(updatePostDto, 'body'),
     async (req, res, next) => {
         try {
@@ -63,6 +66,7 @@ router.put('/:id',
 });
 
 router.delete('/:id', 
+    passport.authenticate('jwt', { session: false }),
     validate(getDeltePostDto, 'params'),
     async (req, res, next) => {
         try {

@@ -1,10 +1,12 @@
 const db = require('../db/mongo/mongo.lib');
 const Post = require('../db/mongo/models/posts.model');
+const Cache = require('../cache/redis.service');
 
 class Posts {
     constructor() {
         this.model = Post;
         this.db = new db();
+        this.cache = new Cache();
     }
 
     async getAll(query) {

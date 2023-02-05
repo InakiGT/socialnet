@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development nodemon src/index.js",
     "test": "jest",
     "test:integration": "jest --config ./integration/jest-integration.json --forceExit",
-    "test:e2e": "jest --config ./e2e/jest-e2e.json --forceExit",
+    "test:e2e": "jest --config ./e2e/jest-e2e.json --detectOpenHandles --forceExit --runInBand",
     "lint": "eslint src/**",
     "lint:fix": "eslint src/** --fix"
   },
@@ -40,6 +40,7 @@
     "mongoose": "^6.9.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "redis": "^4.6.4"
   }
 }
