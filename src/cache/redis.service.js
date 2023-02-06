@@ -11,6 +11,8 @@ class Cache {
             if(err) throw err;
             client.expire(`${collection}:${key}`, 20);
         });
+
+        return true;
     }
 
     async getAll(collection) {
